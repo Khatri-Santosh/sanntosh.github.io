@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+<title>SN Int</title>
+
+<!-- These are what make it install and run like an app. They only work on a
+     page you control, which is why this shell exists rather than pointing the
+     home screen straight at the Apps Script URL. -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#16233A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SN Int">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+
+<style>
+  html, body{
+    margin:0; padding:0; height:100%; overflow:hidden;
+    background:#EDF1F2;
+    font-family:system-ui, -apple-system, sans-serif;
+  }
+  /* The app fills the screen, clearing the notch and the home indicator. */
+  iframe{
+    display:block; border:0; width:100%;
+    height:100dvh;
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
+    box-sizing:border-box;
+    background:#EDF1F2;
+  }
+  #splash{
+    position:fixed; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:14px;
+    background:#16233A; color:#fff; z-index:2;
+    transition:opacity .35s ease;
+  }
+  #splash img{width:96px; height:96px; border-radius:18px;}
+  #splash p{margin:0; font-size:14px; letter-spacing:.14em; text-transform:uppercase; opacity:.65;}
+  #splash.gone{opacity:0; pointer-events:none;}
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <img src="icon-192.png" alt="">
+  <p>SN Int</p>
+</div>
+
+<!-- Replace the src below with your own /exec URL if it ever changes. -->
+<iframe
+  id="app"
+  src="https://script.google.com/macros/s/AKfycbxxAqfjeDOldM1wrBwIxIKZ9Ud01uJOxFqhHPGjMNWyZNOx6eqxy61_sYJQFmIVkyJZ/exec"
+  allow="clipboard-write"
+  referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+<script>
+  // Hide the splash once the app has loaded, with a fallback in case the
+  // load event never fires on a slow connection.
+  var splash = document.getElementById('splash');
+  var hide = function(){ splash.className = 'gone'; };
+  document.getElementById('app').addEventListener('load', hide);
+  setTimeout(hide, 6000);
+
+  // The service worker is what makes the browser offer "Install".
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+</script>
+
+</body>
+</html>
